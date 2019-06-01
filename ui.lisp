@@ -131,7 +131,7 @@ church terms."
 	  (T (ui-validate-action-print
 	      user-input validator action printer stream)
 	     (ui-loop
-	      name validator action-function print-function stream)))))
+	      name validator action printer stream)))))
 
 ;; REPL-base
 
