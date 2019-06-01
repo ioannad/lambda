@@ -1,0 +1,45 @@
+;;;;test/renames.lisp
+
+(in-package :lambda.test)
+
+(defun test-rename ()
+  (destructuring-bind (^% gen   (f-1   (gen%  z)))
+      (rename        '(^  :\f-2 (:\f-1 (:\f-2 z))) ':\f-2 'Y)
+    (assert (eq gen gen% ))
+    (assert (not (eq gen 'y)))
+    (assert (not (eq gen ':\f-2)))
+    (assert (^symbol-p ^%))
+    (assert (eq z 'z))
+    (assert (eq f-1 ':\f-1)))
+
+  (destructuring-bind   (^% y (^%% y% y%%))
+      (rename          '(^  y (^   y    y)) 'y 'x)
+    (assert (every '^symbol-p (list ^% ^%%)))
+    (assert (eq y% y%%))
+    (assert (not (eq y y%)))
+    (assert (every (lambda (sym) (not (eq 'x sym)))
+		   (list '^ ^% ^%% y y% y%%)))))
+
+(defun test-α-convert ()
+  (destructuring-bind (^% new (new% y))
+      (α-convert 'x '(x y))
+    ;;=> (^ #:G12707 (#:G12707 Y))
+    (assert (^symbol-p ^%))
+    (assert (and (eq y 'y)
+		 (eq new new%))))
+  
+  (destructuring-bind (^-1 new-1  (^-2 y ((^-3 new-x (new-x% (z y%))) new-1%)))
+      (α-convert              'x '(^   y ((^   x     (x      (z  y))) x)))
+    ;;=> (^ #:G12728 ((^ Y (^ #:G12729 (#:G12729 (Z Y)))) #:G12728))
+    (assert (every '^symbol-p (list ^-1 ^-2 ^-3)))
+    (assert (eq new-1 new-1%))
+    (assert (and (eq new-x new-x%)
+		 (eq y y%)
+		 (eq y 'y)
+		 (eq z 'z)))))
+
+(defun test-renames (&key verbosep)
+  (test-rename)
+  (test-α-convert)
+  (when verbosep
+    (format *standard-output* "~&RENAMES tests passed.~%")))
