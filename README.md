@@ -6,6 +6,12 @@ A toy compiler of the untyped lambda calculus into common lisp (so far), written
 
 The UI includes two REPLs and a viewer of all available transformations of a user-input λ term.
 
+##### Goal
+
+The goal of this project is to compile the untyped λ calculus and extensions thereof into several targets, such as a stack machine, and some assembly languages.
+
+For learning and understanding compilers, therefore I write most of it by hand. Written in common lisp because I am most comfortable with this language.
+
 ## Try it!
 
 Requirements
@@ -103,6 +109,7 @@ Immediate TODO goals, in my priority order, starting from highest priority.
 -  Implement Tromp's binary format for closed terms, again from [Tro18].
 -  Compile to my computer's assembly (with the help of disassembly).
 -  Implement more encodings or/and replace them with primitives of a target language.
+-  Unify the 3 UI "modes" into one big REPL. Low priority because it's probably not helping in the main goals of this project.
 
 # References
  
