@@ -182,10 +182,10 @@ variable is bound in more than one subterms of term."
 ;; is an abstraction of all free variables in M. For example, the closure of
 ;; '(x y) is '(λ x (λ y (x y))).
 
-(defun ^closure (expression &key
-			      (free-variables (^free-variables expression)))
+(defun ^closure (term &key
+			(free-variables (^free-variables term)))
   (reduce '^abstract free-variables
-	  :initial-value expression))
+	  :initial-value term))
 
 
 
