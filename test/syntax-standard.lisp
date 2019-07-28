@@ -27,9 +27,9 @@
     (assert (every '^term-p
 		   (list e-1 e-2 e-3 e-4)))))
 
-(defun test-do-applications-^recurse ()
+(defun test-do-applications ()
   (labels ((get-operation (term)
-	     (do-applications-^recurse term
+	     (do-applications term
 	       (lambda (operation operand)
 		 (get-operation operation))
 	       #'get-operation)))
@@ -37,14 +37,23 @@
 		   (get-operation
 		    '(λ d (((x (λ x x)) (λ a (a a))) (λ z (z (z z))))))))))
 
-(defun test-do-abstractions-^recurse ()
+(defun test-do-abstractions ()
   (labels ((get-body (term)
-	     (do-abstractions-^recurse term
+	     (do-abstractions term
 	       (lambda (var body) body)
 	       #'get-body)))
     (assert (equal '(((X X) (A A)) (Z (Z Z)))
 		   (get-body
 		    '(((x (λ x x)) (λ a (a a))) (λ z (z (z z)))))))))
+
+(defun test-do-subterms ()
+  (labels ((recur (term) (do-subterms term
+			   #'recur (lambda (subterm)
+				     (if (eq subterm 'a)
+					 'c
+					 subterm)))))
+    (assert (equal (recur '(a (λ b ((a b) c))))
+		   '(C (Λ B ((C B) C)))))))
 
 (defun test-^free-variables ()
   (handler-case (^free-variables '(λ x y z r))
@@ -92,6 +101,9 @@ pattern!~%")))
   (test-^abstraction-p)
   (test-^application-p)
   (test-^term-p)
+  (test-do-abstractions)
+  (test-do-applications)
+  (test-do-subterms)
   (test-^free-variables)
   (test-^bound-variables)
   (test-^closure)

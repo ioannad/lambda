@@ -124,6 +124,23 @@ more arguments that STARTING-FUNCTION could need, may be passed as rest ARGS."
 	   ((var body) :abstraction
 	    (funcall abstractions-action var body)))))
 
+(defun do-subterms (term calling-function step-function)
+  "Applies STEP-FUNCTION to TERM and then recurses the TERM structure applying
+STEP-FUNCTION at each recursion step to each subterm of TERM. 
+CALLING-FUNCTION must be the function which calls DO-SUBTERMS."
+  (flet ((combined (term%)
+	   (funcall calling-function
+		    (funcall step-function term%))))
+    (let ((term%% (funcall step-function term)))
+      (^ecase term%%
+	      ((:variable
+		(funcall step-function term%%))
+	       ((operation operand) :application
+		(list (combined operation)
+		      (combined operand)))
+	       ((var body) :abstraction
+		`(λ ,var ,(combined body))))))))
+
 ;;;; Operations on lambda terms
 
 ;;; Free and bound variables of a lambda term
