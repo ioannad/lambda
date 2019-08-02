@@ -43,6 +43,7 @@
 
 (defun ^variable-p (symbol)
   (and (symbolp symbol)
+       symbol
        (not (^symbol-p symbol))))
 
 (defun ^abstraction-p (term)
