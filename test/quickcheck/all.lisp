@@ -5,6 +5,10 @@
 (in-package :lambda.quickcheck)
 
 (defun run-quickcheck ()
+  (format *standard-output* "~&---------------------------~%")
+  (format *standard-output* "~&Running cl-quickcheck tests.~%")
+  (format *standard-output* "~&---------------------------~%")
+  
   (let ((depth 27) ; The maximum depth of a ^term in the tests.
 	(bound 5)  ; A bound on new (some-^variables) to generate.
 	(verbosep NIL)) ; Control test verbosity.
@@ -13,7 +17,7 @@
     (quickcheck
       ;; syntax-standard
       (quickcheck-predicates depth verbosep)
-      
+ 
       (let ((term-generator         (lambda () (a-^term depth)))
 	    (term%-generator        (lambda () (a-^term depth)))
 	    (term%%-generator       (lambda () (a-^term depth)))

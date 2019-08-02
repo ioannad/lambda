@@ -11,6 +11,10 @@
 		 (λ x x)
 		 (λ x (x u)))))
     
+    (format *standard-output* "~&---------------------------~%")
+    (format *standard-output* "~&Running standard tests.~%")
+    (format *standard-output* "~&---------------------------~%")
+    
     (test-syntax-standard terms :verbosep verbosep)
     (test-syntax-de-bruijn :verbosep verbosep)
     (test-transformations terms :verbosep verbosep)

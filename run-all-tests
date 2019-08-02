@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Runs all tests for lambda.
+
+echo "Testing with Clozure Common Lisp..." \
+    && ccl -b -l run-all-tests.lisp \
+    && echo "" \
+    && echo "Testing with Steel Bank Common Lisp..." \
+    && sbcl --load run-all-tests.lisp \
+    && echo "" \
+    && echo "------------------------------------" \
+    && echo "All tests passed on CCL and on SBCL." \
+    && echo "------------------------------------"
+
+
