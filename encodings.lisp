@@ -27,6 +27,8 @@
 
 (defun recursing-combinators ()
   (list (assign :Y     '(λ a ((λ b (a (b b))) (λ c (a (c c))))))
+	(assign :Y-    '((λ z (z z)) (λ z (λ f (f ((z z) f))))))
+	(assign :Y--   '((λ x (λ y ((x y) x))) (λ y (λ x (y ((x y) x))))))
 	(assign :omega '((λ a (a a)) (λ a (a a))))))
 
 ;;; Operations returning encodings from terms

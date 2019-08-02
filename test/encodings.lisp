@@ -15,16 +15,20 @@
 
 ;; A proof of the fixed point theorem for this implementation of λ calculus.
 
-(defun test-y-combinator ()
+(defun test-y-combinators ()
     "From [Barendregt 1994; Theorem 2.12(ii) For every =term=,
 =(term (:Y term)) = (:Y term)=."
     (let ((terms (list 'a
 		       '(a b)
-		       '(λ a b))))
+		       '((b a) (λ b (λ c ((a b) (c d))))))))
       (loop for term in terms
-	 for YF = (^eval-step `(:Y ,term) (recursing-combinators))
+	 for YF  = (^eval-step `(:Y ,term) (recursing-combinators))
+	 for Y-F = (^eval-step `(:Y- ,term) (recursing-combinators))
 	 do (assert (^eq (^eval-step YF)
-			 (list term YF))))))
+			 (list term YF)))
+	 do (assert (^eq (^eval-step (^eval-step (^eval-step Y-F)))
+			 (list term Y-F))))))
+			  
 
 ;;; Church-numerals
 
@@ -81,7 +85,7 @@
 				   (all-encodings)))
 				(mapcar 'cdr (all-encodings))))
   (test-booleans)
-  (test-y-combinator)
+  (test-y-combinators)
   (test-church-numerals)
   (test-barendregt-arithmetic)
   (when verbosep
