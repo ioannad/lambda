@@ -34,7 +34,7 @@
     (format stream "~&~a " string)
     (finish-output)
     (handler-case (read nil 'eof nil)
-      (error (e) nil))))
+      (error (e) (format *error-output* "Error! ~a~%" e)))))
 
 ;; Pretty printing
 
@@ -86,7 +86,7 @@ church terms."
   (format-warnings stream)
   (format stream "~%~%Example inputs:~%")
   (format stream
-	  ":or~%(((:if :true) a) b)~%:eval ((:and a) ((:or :false) b))~%~%"))
+	  ":or~%(((:if :true) a) b)~%(:eval ((:and a) ((:or :false) b)))~%~%"))
 
 (defun help-base (stream)
   (initial-help-base stream)
@@ -172,9 +172,16 @@ church terms."
 	      "~&Warning! You enter the open λ term: ~s~%"
 	      term)
       (format *error-output*
-	      "Closing the term to:                ~s~%"
-	      closed))
+	      "Closing the term to:                ")
+      (pretty-print closed)
+      (format *error-output* "~%"))
     closed))
+
+(defun eval-warn (term &key (warnp t))
+  (let ((evaled (^eval-normal term *base-encodings*)))
+    (when warnp
+      (format *error-output* "~&Evaluating ~a, resulting in ~a.~%" term (print-term evaled)))
+    evaled))
 
 (defun validator-transformations-viewer (user-input &key (warnp t) &aux evalp)
   (let* ((maybe-term (if (and (listp user-input)
@@ -182,13 +189,15 @@ church terms."
 			 (progn (setf evalp T)
 				(second user-input))
 			 user-input))
-	 ;; Validation happens by ^free-variables
+	 ;; Validation happens by '^free-variables
 	 (free (set-difference (^free-variables maybe-term)
 			       (mapcar 'car *base-encodings*))))
-    (list evalp
-	  (if free
-	      (close-warn maybe-term free :warnp warnp)
-	      maybe-term))))
+    (let ((term (if free
+		    (close-warn maybe-term free :warnp warnp)
+		    maybe-term)))
+      (if evalp
+	  (eval-warn term :warnp warnp)
+	  (^substitute-environment term *base-encodings*)))))
 
 (defun print-transformations (term &key stream)
   (format stream
@@ -216,7 +225,7 @@ church terms."
   (help-back-exit stream)
   (ui-loop "viewer"
 	   #'validator-transformations-viewer
-	   #'action-transformations-viewer
+	   #'print-term
 	   #'print-transformations
 	   stream))
 

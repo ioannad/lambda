@@ -49,9 +49,9 @@
 
 ;; transformations viewer
 
-(defun test-action-transformations-viewer-manual (input output)
+(defun test-transformations-viewer-manual (input output)
   (assert (equal (lambda.ui::pretty-print
-		  (lambda.ui::action-transformations-viewer
+		  (lambda.ui::print-term
 		   (lambda.ui::validator-transformations-viewer
 		    input :warnp nil))
 		  :stream nil)
@@ -75,7 +75,7 @@
 	(output-2 "(λ a (λ b a))")
 	(input-3  '(:eval ((:and a) ((:or :false) b))))
 	(output-3 "(λ a (λ b ((a b) a)))"))
-    (mapcar 'test-action-transformations-viewer-manual
+    (mapcar 'test-transformations-viewer-manual
 	    (list input-1 input-2 input-3)
 	    (list output-1  output-2  output-3)))
   (when verbosep

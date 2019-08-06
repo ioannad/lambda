@@ -77,8 +77,8 @@ the basic-encodings, your term will be closed by surrounding it with
 λ-abstractions of your free variables, printing a warning. Note that in this
 case, the names of these free variables are not guaranteed to stay the same.
 
-If you write :eval before your term, then your term is first reduced and the 
-representations of its reduction are shown."))
+If you call :eval with your term, then your term is first normal-order reduced
+and the representations of its reduction are shown."))
 
 
 
