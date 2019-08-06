@@ -17,6 +17,7 @@
     
     (test-syntax-standard terms :verbosep verbosep)
     (test-syntax-de-bruijn :verbosep verbosep)
+    (test-syntax-ski :verbosep verbosep)
     (test-transformations terms :verbosep verbosep)
     (test-renames :verbosep verbosep)
     (test-equality :verbosep verbosep)

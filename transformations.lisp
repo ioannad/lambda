@@ -7,11 +7,13 @@
 ;; So far implemented:
 ;; - standard->de-bruijn
 ;; - standard->common-lisp
+;; - standard->ski
+;; - ski->standard
+;; - ski->binary-ski
+;; - binary-ski->ski
 ;;
 ;; TODO:
 ;; - de-bruijn->standard
-;; - standard->SKI
-;; - SKI->standard
 ;; - standard->mogensen-scott
 ;; - mogensen-scott->standard
 ;; - standard->binary
@@ -94,3 +96,26 @@ double recursion it might be fed either objects of λ term structure or of de
 ;; TODO (defun common-lisp->standard (expression) )
 ;; Well. At least some subset of common lisp. ^^
 
+
+;;; ski-calculus, or combinatory logic
+
+;; see also transformations-ski.lisp
+;; :K ≡ '(λ x (λ y x))
+;; :S ≡ '(λ x (λ y (λ z ((x z) (y z)))))
+;; as seen later in encodings.lisp
+
+(defun standard->ski (term)
+  (do-abstractions term
+    (lambda (var body) (λ² var (standard->ski body)))
+    'standard->ski))
+
+(defun ski->standard (ski)
+  (let ((S '(λ x (λ y (λ z ((x z) (y z))))))
+	(K '(λ x (λ y x)))
+	(I '(λ x x)))
+    (flet ((remove-skis (term)
+	     (cond ((eq term :S) S)
+		   ((eq term :K) K)
+		   ((eq term :I) I)
+		   (T            term))))
+      (do-subterms ski #'ski->standard #'remove-skis))))

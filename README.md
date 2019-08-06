@@ -4,11 +4,12 @@
 
 A toy compiler of the untyped lambda calculus into common lisp (so far), written in common lisp, with an interpreter and a user interface (UI).
 
-The UI includes two REPLs and a viewer of all available transformations of a user-input λ term.
+The UI includes a viewer of all available transformations of a user-input λ term, as well as two simple REPLs.
+The viewer can also evaluate terms before listing their different representations, and therefore is the recommended part of the UI (Church arithmetic support TBA).
 
 ##### Goal
 
-The goal of this project is to compile the untyped λ calculus and extensions thereof into several targets, such as a stack machine, and some assembly languages.
+The goal of this project is to compile the untyped λ calculus and extensions thereof into several targets, such as a stack machine (WebAssembly in mind), and some assembly languages. 
 
 For learning and understanding compilers, therefore I write most of it by hand. Written in common lisp because I am most comfortable with this language.
 
@@ -63,19 +64,21 @@ With primitives:
 In the UI's "base REPL", the above evaluate to `:true` and `b`, respectively.
 
 ## Implementation features
-  - A User Interface (UI) in the package `:lambda.ui` (call `(main)`) using self-encoded primitives, which include:
-      + Two Read Eval Print Loops (REPLs) for this λ calculus:
-          * `λ.base` allows you to use the following symbols as primitives: `:ID :TRUE :FALSE :S :AND :OR :IF :Y :OMEGA`
+  - A User Interface (UI) in the package `:lambda.ui` (call `(main)`) using self-encoded primitives (encoded as λ terms). 
+    The UI includes:
+	+ A transformation viewer: Input a λ TERM and see its available representations (see next list item). Evaluate the TERM before returning the different representations with =:eval TERM=. In the TERM you can use the same primitives as the `λ.base` REPL below.
+	+ Two simple Read Eval Print Loops (REPLs) for this λ calculus:
+          * `λ.base` allows you to use the following symbols as self-encoded primitives: `:ID :TRUE :FALSE :S :AND :OR :IF :Y :OMEGA`
           * `λ.church` allows you to use base, as well as numbers in your statements, and the following symbols as primitives for numeric functions:
             `:A+ :A* :Aexp :Azero? :A+1 :A-1 :A-factorial`, for plus, times, exponent, zero test, successor, predecessor, and factorial.
-      + A transformation viewer: Input a λ term and see its available representations (see next list item).
+
   - Showcases representations of lambda terms in my quest to understand compilers.
     So far, showcased representations of lambda terms are the following.
       + The standard, single variable binding, parenthesised lambda terms as quoted common-lisp lists, for example, `'(^ x (x y))`.
       + De Bruijn representation (locally nameless for open terms), the example becomes `'(^ (0 y))`.
       + A common lisp representation, the example becomes `'(lambda (x) (funcall x y))`.
-      + TBA: Implementation of Tromp's
-        * combinatorial logic representation in the form of SKI-calculus (towards a stack machine),
+      + An implementation of Tromp's
+        * combinatorial logic representation in the form of SKI-calculus (towards a stack machine - WebAssembly),
         * and his binary representation.
       + TBA: Implementation of Mogensen's continuation passing style self encoding of lambda calculus (Mogensen-Scott encoding).
       + I provide transformations between defined representations.
@@ -90,9 +93,9 @@ In the UI's "base REPL", the above evaluate to `:true` and `b`, respectively.
    By adding a catch-loop stepper-based reducer of the standard representation, I have been able to use cl-quickcheck on arbitrary generated terms, and
    quickcheck also examples, theorems, and lemmas from [BarBar84].
    
-   Run the quickcheck tests by evaluating `(lambda.quickcheck:run-quickcheck)`.
+   Extensive manually written tests are performed as well.
    
-   Extensive manually written tests are performed as well by evaluating: `(lambda.test:test-all)`
+   Run all tests for CCL and SBCL by loading `run-all-tests.lisp`, or for a particular common lisp implementation from the command line for example as `ccl -b -l run-all-tests.lisp`.
    
 #### Documented
 
@@ -102,14 +105,14 @@ I used the principle of literal programming, with comments in plain text format.
 # TODO
 
 Immediate TODO goals, in my priority order, starting from highest priority.
--  Implement Tromp's Combinatorial Logic representation in the form of SKI-calculus (towards a stack machine), from his 2018 paper [Tro18].
+-  Implement Tromp's cross interpreter for SKI-terms.
+-  Add transformation of SKI-calculus terms to WebAssembly.
+-  Implement more encodings or/and replace them with primitives of a target language (e.g. WebAssembly).
 -  Find a nicer way around printing keywords with their dots (print related functions in ui.lisp are messy!)
 -  Implement UI for steppers.
 -  Find a faster encoding for natural numbers or integers, or/and get common lisp (or other target languages, such as the above mentioned stack machine)
--  Implement Tromp's binary format for closed terms, again from [Tro18].
 -  Compile to my computer's assembly (with the help of disassembly).
--  Implement more encodings or/and replace them with primitives of a target language.
--  Unify the 3 UI "modes" into one big REPL. Low priority because it's probably not helping in the main goals of this project.
+-  Unify the 3 UI "modes" into one big REPL. Low priority because it's probably not that relevant to the main goals of this project.
 
 # References
  

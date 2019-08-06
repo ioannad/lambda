@@ -25,12 +25,24 @@
 	   #:db-term-p
 	   #:db-free-variables))
 
+(defpackage :lambda.syntax-ski
+  (:use #:cl
+	#:lambda.syntax-standard)
+  (:export #:ski-term-p
+	   #:ski-free-variables
+	   #:ski-combinator-p))
+
 (defpackage :lambda.transformations
   (:use #:cl
 	#:lambda.syntax-standard
-	#:lambda.syntax-de-bruijn)
+	#:lambda.syntax-de-bruijn
+	#:lambda.syntax-ski)
   (:export #:standard->de-bruijn
-	   #:standard->common-lisp))
+	   #:standard->common-lisp
+	   #:standard->ski
+	   #:ski->standard
+	   #:ski->binary-ski
+	   #:binary-ski->ski))
 
 (defpackage :lambda.renames
   (:use #:cl
@@ -131,12 +143,32 @@
 	#:lambda.interpreter)
   (:export #:^compile))
 
+;; A package with everything as a playground
+
+(defpackage :lambda
+  (:use #:cl
+	#:lambda.syntax-standard
+	#:lambda.syntax-de-bruijn
+	#:lambda.syntax-ski
+	#:lambda.transformations
+	#:lambda.renames
+	#:lambda.equality
+	#:lambda.substitution
+	#:lambda.reducers
+	#:lambda.encodings
+	#:lambda.decodings
+	#:lambda.interpreter
+	#:lambda.ui
+	#:lambda.compiler))
+
+
 ;;; Test packages
 
 (defpackage :lambda.test
   (:use #:cl
 	#:lambda.syntax-standard
 	#:lambda.syntax-de-bruijn
+	#:lambda.syntax-ski
 	#:lambda.transformations
 	#:lambda.renames
 	#:lambda.equality

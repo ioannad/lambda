@@ -12,10 +12,19 @@
 	       (:file "syntax-de-bruijn"
 		      :depends-on ("packages"
 				   "syntax-standard"))
+	       (:file "syntax-ski"
+		      :depends-on ("packages"
+				   "syntax-standard"))
+	       (:file "transformations-ski"
+		      :depends-on ("packages"
+				   "syntax-standard"
+				   "syntax-ski"))
 	       (:file "transformations"
 		      :depends-on ("packages"
 				   "syntax-standard"
-				   "syntax-de-bruijn"))
+				   "syntax-de-bruijn"
+				   "syntax-ski"
+				   "transformations-ski"))
 	       (:file "renames"
 		      :depends-on ("packages"
 				   "syntax-standard"))
@@ -82,11 +91,17 @@
 				   "test/helpers"
 				   "syntax-standard"
 				   "syntax-de-bruijn"))
+	       (:file "test/syntax-ski"
+		      :depends-on ("packages"
+				   "syntax-ski"
+				   "test/helpers"))
 	       (:file "test/transformations"
 		      :depends-on ("packages"
 				   "test/helpers"
 				   "syntax-standard"
 				   "syntax-de-bruijn"
+				   "syntax-ski"
+				   "transformations-ski"
 				   "transformations"))
 	       (:file "test/renames"
 		      :depends-on ("packages"
@@ -135,6 +150,7 @@
 		      :depends-on ("packages"
 				   "test/syntax-standard"
 				   "test/syntax-de-bruijn"
+				   "test/syntax-ski"
 				   "test/transformations"
 				   "test/renames"
 				   "test/equality"
@@ -161,7 +177,9 @@
 				   "test/quickcheck/generators"))
 	       (:file "test/quickcheck/transformations"
 		      :depends-on ("packages"
+				   "syntax-standard"
 				   "syntax-de-bruijn"
+				   "transformations-ski"
 				   "transformations"
 				   "test/quickcheck/helpers"))
 	       (:file "test/quickcheck/renames-equality"

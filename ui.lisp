@@ -205,20 +205,18 @@ church terms."
 * standard-syntax with primitives:        ~a
 * standard-syntax without primitives:     ~(~a~)
 * de Bruijn representation:               ~(~a~)
-* Common Lisp representation:             ~(~a~)~%~%"
+* Common Lisp representation:             ~(~a~)
+* Combinatorial Logic (SKI-calculus):     ~(~a~)
+* Tromp's binary SKI-calculus:            ~(~a~)~%~%"
 	  (pretty-print
 	   (decode-encodings-in-term term (reverse *base-encodings*))
 	   :stream nil)
 	  term
 	  (standard->de-bruijn term)
-	  (standard->common-lisp term)))
-
-(defun action-transformations-viewer (validated)
-  (print-term
-   (destructuring-bind (evalp term) validated
-     (if evalp
-	 (^eval-normal term *base-encodings*)
-	 (^substitute-environment term *base-encodings*)))))
+	  (standard->common-lisp term)
+	  (standard->ski term)
+	  (ski->binary-ski (standard->ski term))))
+	  
 
 (defun transformation-viewer (stream)
   (help-transformation-viewer stream)
